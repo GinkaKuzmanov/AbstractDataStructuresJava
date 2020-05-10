@@ -22,6 +22,22 @@ public class TreeFactory {
         return this.getRoot();
     }
 
+
+    public Tree<Integer> createNodeByKey(int key) {
+        this.nodesByKeys.putIfAbsent(key, new Tree<>(key));
+        return this.nodesByKeys.get(key);
+    }
+
+
+    public void addEdge(int parent, int child) {
+        Tree<Integer> parentTree = this.createNodeByKey(parent);
+        Tree<Integer> childTree = this.createNodeByKey(child);
+
+        childTree.setParent(parentTree);
+        parentTree.addChild(childTree);
+    }
+
+
     private Tree<Integer> getRoot() {
         for (Tree<Integer> node : nodesByKeys.values()) {
             if (node.getParent() == null) {
@@ -30,19 +46,6 @@ public class TreeFactory {
         }
 
         return null;
-    }
-
-    public Tree<Integer> createNodeByKey(int key) {
-        this.nodesByKeys.putIfAbsent(key, new Tree<>(key));
-        return this.nodesByKeys.get(key);
-    }
-
-    public void addEdge(int parent, int child) {
-        Tree<Integer> parentTree = this.createNodeByKey(parent);
-        Tree<Integer> childTree = this.createNodeByKey(child);
-
-        childTree.setParent(parentTree);
-        parentTree.addChild(childTree);
     }
 }
 

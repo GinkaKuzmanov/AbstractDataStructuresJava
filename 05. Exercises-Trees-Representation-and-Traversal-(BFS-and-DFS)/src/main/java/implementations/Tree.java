@@ -55,20 +55,6 @@ public class Tree<E> implements AbstractTree<E> {
         return builder.toString().trim();
     }
 
-    private void traverseTreeRecursively(StringBuilder builder, int indent, Tree<E> tree) {
-        builder
-                .append(this.getPadding(indent))
-                .append(tree.getKey())
-                .append(System.lineSeparator());
-
-        for (Tree<E> child : tree.children) {
-            traverseTreeRecursively(builder, indent + 2, child);
-        }
-    }
-
-    private String getPadding(int size) {
-        return " ".repeat(Math.max(0, size));
-    }
 
     @Override
     public List<E> getLeafKeys() {
@@ -78,20 +64,6 @@ public class Tree<E> implements AbstractTree<E> {
                 .collect(Collectors.toList());
     }
 
-    private List<Tree<E>> traverseBFS() {
-        Deque<Tree<E>> treeDeque = new ArrayDeque<>();
-        treeDeque.offer(this);
-        List<Tree<E>> allNodes = new ArrayList<>();
-
-        while (!treeDeque.isEmpty()) {
-            Tree<E> currentTree = treeDeque.poll();
-            allNodes.add(currentTree);
-            for (Tree<E> child : currentTree.children) {
-                treeDeque.offer(child);
-            }
-        }
-        return allNodes;
-    }
 
     @Override
     public List<E> getMiddleKeys() {
@@ -104,12 +76,7 @@ public class Tree<E> implements AbstractTree<E> {
                 .collect(Collectors.toList());
     }
 
-    private void traverseDFS(List<Tree<E>> collection, Tree<E> tree) {
-        collection.add(tree);
-        for (Tree<E> child : tree.children) {
-            traverseDFS(collection, child);
-        }
-    }
+
 
     @Override
     public Tree<E> getDeepestLeftmostNode() {
@@ -132,19 +99,7 @@ public class Tree<E> implements AbstractTree<E> {
         return leftMostNode;
     }
 
-    private int getStepsFromLeafToRoot(Tree<E> tree) {
-        int counter = 0;
-        Tree<E> current = tree;
-        while (current.parent != null) {
-            counter++;
-            current = current.parent;
-        }
-        return counter;
-    }
 
-    private boolean isLeaf() {
-        return this.parent != null && this.children.size() == 0;
-    }
 
     @Override
     public List<E> getLongestPath() {
@@ -205,6 +160,63 @@ public class Tree<E> implements AbstractTree<E> {
             }
         }
         return subTrees;
+    }
+
+
+    private void traverseTreeRecursively(StringBuilder builder, int indent, Tree<E> tree) {
+        builder
+                .append(this.getPadding(indent))
+                .append(tree.getKey())
+                .append(System.lineSeparator());
+
+        for (Tree<E> child : tree.children) {
+            traverseTreeRecursively(builder, indent + 2, child);
+        }
+    }
+
+
+    private String getPadding(int size) {
+        return " ".repeat(Math.max(0, size));
+    }
+
+
+    private List<Tree<E>> traverseBFS() {
+        Deque<Tree<E>> treeDeque = new ArrayDeque<>();
+        treeDeque.offer(this);
+        List<Tree<E>> allNodes = new ArrayList<>();
+
+        while (!treeDeque.isEmpty()) {
+            Tree<E> currentTree = treeDeque.poll();
+            allNodes.add(currentTree);
+            for (Tree<E> child : currentTree.children) {
+                treeDeque.offer(child);
+            }
+        }
+        return allNodes;
+    }
+
+
+    private int getStepsFromLeafToRoot(Tree<E> tree) {
+        int counter = 0;
+        Tree<E> current = tree;
+        while (current.parent != null) {
+            counter++;
+            current = current.parent;
+        }
+        return counter;
+    }
+
+
+    private void traverseDFS(List<Tree<E>> collection, Tree<E> tree) {
+        collection.add(tree);
+        for (Tree<E> child : tree.children) {
+            traverseDFS(collection, child);
+        }
+    }
+
+
+    private boolean isLeaf() {
+        return this.parent != null && this.children.size() == 0;
     }
 }
 
