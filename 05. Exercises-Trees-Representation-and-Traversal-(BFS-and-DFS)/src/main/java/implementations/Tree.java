@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Tree<E> implements AbstractTree<E> {
+
     private final E value;
     private Tree<E> parent;
     private final List<Tree<E>> children;
 
     @SafeVarargs
-    //children can be even zero, we need only a node for possibility of tree structure
     public Tree(E key, Tree<E>... children) {
         this.value = key;
         this.children = new ArrayList<>();
@@ -153,29 +153,56 @@ public class Tree<E> implements AbstractTree<E> {
 
         List<E> toReturn = new ArrayList<>();
         for (Tree<E> tree : allTrees) {
-                int currentPath = this.getStepsFromLeafToRoot(tree);
-                if (currentPath > maxPath) {
-                    toReturn.add(tree.getKey());
-                    maxPath = currentPath;
-                }
+            int currentPath = this.getStepsFromLeafToRoot(tree);
+            if (currentPath > maxPath) {
+                toReturn.add(tree.getKey());
+                maxPath = currentPath;
+            }
         }
 
-      return toReturn;
+        return toReturn;
     }
 
 
     @Override
     public List<List<E>> pathsWithGivenSum(int sum) {
-        //TODO: implement
+        int s = 0;
+
         List<List<E>> results = new ArrayList<>();
 
-        return null;
+        List<Tree<E>> treesWithSum = this.traverseBFS();
+
+        List<E> temp = new ArrayList<>();
+
+        for (Tree<E> current : treesWithSum) {
+            s += (int) current.getKey();
+            if (s < sum) {
+                temp.add(current.value);
+            }
+
+            if (s == sum) {
+                results.add(temp);
+                temp.clear();
+            }
+        }
+
+        return results;
     }
 
     @Override
     public List<Tree<E>> subTreesWithGivenSum(int sum) {
-        //TODO: implement
-        return null;
+        int s = 0;
+        List<Tree<E>> allTrees = this.traverseBFS();
+        List<Tree<E>> subTrees = new ArrayList<>();
+        for (Tree<E> tree : allTrees) {
+            subTrees.add(tree);
+            for(Tree<E> children : tree.children){
+                if(s<=sum){
+                    subTrees.add(children);
+                }
+            }
+        }
+        return subTrees;
     }
 }
 
