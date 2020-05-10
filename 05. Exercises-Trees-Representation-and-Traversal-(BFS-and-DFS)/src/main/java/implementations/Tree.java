@@ -196,7 +196,9 @@ public class Tree<E> implements AbstractTree<E> {
         List<Tree<E>> subTrees = new ArrayList<>();
         for (Tree<E> tree : allTrees) {
             subTrees.add(tree);
+            s += (int) tree.value;
             for(Tree<E> children : tree.children){
+                s += (int)children.value;
                 if(s<=sum){
                     subTrees.add(children);
                 }
