@@ -96,4 +96,18 @@ public class BinarySearchTreeTest {
 
     }
 
+    @Test
+    public void deleteMax(){
+        assertTrue(bst.contains(13));
+        bst.deleteMax();
+        assertFalse(bst.contains(13));
+    }
+    @Test
+    public void deleteMin(){
+        assertTrue(bst.contains(1));
+        bst.deleteMin();
+        assertFalse(bst.contains(1));
+    }
+
+
 }

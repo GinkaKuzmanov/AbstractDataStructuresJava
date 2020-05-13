@@ -11,8 +11,10 @@ import java.util.List;
 public class BinarySearchTree<E extends Comparable<E>> {
     private Node<E> root;
 
+
     public BinarySearchTree(E element) {
         this.root = new Node<>(element);
+
     }
 
     public BinarySearchTree(Node<E> copiedRoot) {
@@ -21,17 +23,18 @@ public class BinarySearchTree<E extends Comparable<E>> {
 
     public static class Node<E> {
         private E value;
-
         private Node<E> leftChild;
-
         private Node<E> rightChild;
+        private int count;
 
         public Node(E value) {
             this.value = value;
+            this.count = 1;
         }
 
         public Node(Node<E> otherNode) {
             this.value = otherNode.value;
+            this.count = otherNode.count;
 
             if (otherNode.getLeft() != null) {
                 this.leftChild = new Node<>(otherNode.getLeft());
@@ -92,6 +95,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
             }
         }
 
+        node.count++;
     }
 
 
@@ -159,15 +163,43 @@ public class BinarySearchTree<E extends Comparable<E>> {
     }
 
     public void deleteMin() {
+        ensureValidState();
 
+        if (this.root.getLeft() == null) {
+            this.root = this.root.getRight();
+            return;
+        }
+
+        Node<E> currentNode = this.root;
+
+        while (currentNode.getLeft().getLeft() != null) {
+            currentNode.count--;
+            currentNode = currentNode.getLeft();
+        }
+        currentNode.count--;
+        currentNode.leftChild = currentNode.getLeft().getRight();
     }
 
-    public void deleteMax() {
 
+    public void deleteMax() {
+        ensureValidState();
+
+        if (this.root.getRight() == null) {
+            this.root = this.root.getLeft();
+            return;
+        }
+        Node<E> current = this.root;
+        while (current.getRight().getRight() != null) {
+            current.count--;
+            current = current.getRight();
+        }
+
+        current.count--;
+        current.rightChild = current.getRight().getLeft();
     }
 
     public int count() {
-        return 0;
+        return this.root == null ? 0 : this.root.count;
     }
 
     public int rank(E element) {
@@ -192,5 +224,11 @@ public class BinarySearchTree<E extends Comparable<E>> {
 
     private boolean isSmaller(E element, Node<E> node) {
         return element.compareTo(node.getValue()) < 0;
+    }
+
+    private void ensureValidState() {
+        if (this.root == null) {
+            throw new IllegalStateException();
+        }
     }
 }
