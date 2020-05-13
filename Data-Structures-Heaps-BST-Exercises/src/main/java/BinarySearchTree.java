@@ -1,5 +1,8 @@
 import solutions.BinaryTree;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
 import java.util.function.Consumer;
 
 import java.util.List;
@@ -12,7 +15,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
         this.root = new Node<>(element);
     }
 
-    public BinarySearchTree(Node<E> copiedRoot){
+    public BinarySearchTree(Node<E> copiedRoot) {
         this.root = new Node<>(copiedRoot);
     }
 
@@ -27,14 +30,14 @@ public class BinarySearchTree<E extends Comparable<E>> {
             this.value = value;
         }
 
-        public Node(Node<E> otherNode){
+        public Node(Node<E> otherNode) {
             this.value = otherNode.value;
 
-            if (otherNode.getLeft() != null){
+            if (otherNode.getLeft() != null) {
                 this.leftChild = new Node<>(otherNode.getLeft());
             }
 
-            if(otherNode.getRight() != null){
+            if (otherNode.getRight() != null) {
                 this.rightChild = new Node<>(otherNode.getRight());
             }
         }
@@ -107,12 +110,12 @@ public class BinarySearchTree<E extends Comparable<E>> {
             return containsNode(node.getRight(), element);
         }
 
-        return containsNode(node.getLeft(),element);
+        return containsNode(node.getLeft(), element);
     }
 
 
     public BinarySearchTree<E> search(E element) {
-        Node<E> found = searchedNode(this.root,element);
+        Node<E> found = searchedNode(this.root, element);
         return found == null ? null : new BinarySearchTree<>(found);
     }
 
@@ -127,11 +130,32 @@ public class BinarySearchTree<E extends Comparable<E>> {
 
             return searchedNode(node.getRight(), element);
         }
-        return searchedNode(node.getLeft(),element);
+        return searchedNode(node.getLeft(), element);
     }
 
-    public List<E> range(E first, E second) {
-        return null;
+    public List<E> range(E lower, E upper) {
+        List<E> range = new ArrayList<>();
+        Deque<Node<E>> queue = new ArrayDeque<>();
+
+        queue.offer(this.root);
+
+        while (!queue.isEmpty()) {
+            Node<E> current = queue.poll();
+            if (current.getLeft() != null) {
+                queue.offer(current.getLeft());
+            }
+            if (current.getRight() != null) {
+                queue.offer(current.getRight());
+            }
+
+            if (isSmaller(lower, current) && isGreater(upper, current)) {
+                range.add(current.getValue());
+            } else if (isEqual(lower, current) || isEqual(upper, current)) {
+                range.add(current.getValue());
+            }
+        }
+
+        return range;
     }
 
     public void deleteMin() {

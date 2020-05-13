@@ -82,4 +82,18 @@ public class BinarySearchTreeTest {
         assertNull(bst.search(7));
     }
 
+    @Test
+    public void testRange(){
+        List<Integer> list = bst.range(1,7);
+
+        List<Integer> expected = Arrays.asList(1,2,5);
+
+        assertEquals(3, expected.size());
+
+        for (Integer integer : list) {
+            assertTrue(expected.contains(integer));
+        }
+
+    }
+
 }
