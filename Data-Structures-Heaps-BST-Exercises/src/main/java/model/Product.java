@@ -33,9 +33,7 @@ public class Product implements Decrease<Product>, Comparable<Product> {
 
     @Override
     public int hashCode() {
-        // Final like we are going to assign that again somewhere
-        // no, no it is safety - no nerd intentions were to take place here,
-        // whatsoever. And yea this comment is so long just so you can read it :)
+
         final int prime = 73;
         return Objects.hash(price) * prime;
     }
