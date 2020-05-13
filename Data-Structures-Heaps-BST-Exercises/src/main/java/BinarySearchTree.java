@@ -12,6 +12,10 @@ public class BinarySearchTree<E extends Comparable<E>> {
         this.root = new Node<>(element);
     }
 
+    public BinarySearchTree(Node<E> copiedRoot){
+        this.root = new Node<>(copiedRoot);
+    }
+
     public static class Node<E> {
         private E value;
 
@@ -21,6 +25,18 @@ public class BinarySearchTree<E extends Comparable<E>> {
 
         public Node(E value) {
             this.value = value;
+        }
+
+        public Node(Node<E> otherNode){
+            this.value = otherNode.value;
+
+            if (otherNode.getLeft() != null){
+                this.leftChild = new Node<>(otherNode.getLeft());
+            }
+
+            if(otherNode.getRight() != null){
+                this.rightChild = new Node<>(otherNode.getRight());
+            }
         }
 
         public Node<E> getLeft() {
@@ -41,9 +57,11 @@ public class BinarySearchTree<E extends Comparable<E>> {
     }
 
     private void nodeInOrder(Node<E> node, Consumer<E> consumer) {
-        if(node == null) { return;}
+        if (node == null) {
+            return;
+        }
 
-        this.nodeInOrder(node.getLeft(),consumer);
+        this.nodeInOrder(node.getLeft(), consumer);
         consumer.accept(node.getValue());
         this.nodeInOrder(node.getRight(), consumer);
     }
@@ -73,12 +91,43 @@ public class BinarySearchTree<E extends Comparable<E>> {
 
     }
 
+
     public boolean contains(E element) {
-        return false;
+        //reflective approach
+        return containsNode(this.root, element);
     }
 
+    private boolean containsNode(Node<E> node, E element) {
+        if (node == null) {
+            return false;
+        }
+        if (isEqual(element, node)) {
+            return true;
+        } else if (isGreater(element, node)) {
+            return containsNode(node.getRight(), element);
+        }
+
+        return containsNode(node.getLeft(),element);
+    }
+
+
     public BinarySearchTree<E> search(E element) {
-        return null;
+        Node<E> found = searchedNode(this.root,element);
+        return found == null ? null : new BinarySearchTree<>(found);
+    }
+
+    private Node<E> searchedNode(Node<E> node, E element) {
+        if (node == null) {
+            return null;
+        }
+        if (isEqual(element, node)) {
+            return node;
+
+        } else if (isGreater(element, node)) {
+
+            return searchedNode(node.getRight(), element);
+        }
+        return searchedNode(node.getLeft(),element);
     }
 
     public List<E> range(E first, E second) {
@@ -117,7 +166,7 @@ public class BinarySearchTree<E extends Comparable<E>> {
         return element.compareTo(node.getValue()) > 0;
     }
 
-    private boolean isSmaller(E element, Node<E> node){
+    private boolean isSmaller(E element, Node<E> node) {
         return element.compareTo(node.getValue()) < 0;
     }
 }

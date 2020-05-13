@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 
 public class BinarySearchTreeTest {
@@ -52,6 +52,34 @@ public class BinarySearchTreeTest {
             assertEquals(expected.get(i),elements.get(i));
         }
 
+    }
+
+    @Test
+    public void testContainsTrue(){
+        assertTrue(bst.contains(8));
+    }
+
+    @Test
+    public void testContainsFalse(){
+        assertFalse(bst.contains(7));
+    }
+
+    @Test
+    public void testSearchTrue(){
+        BinarySearchTree<Integer> searchTree = bst.search(13);
+        bst.insert(7);
+
+        assertEquals(Integer.valueOf(13),searchTree.getRoot().getValue());
+        assertEquals(Integer.valueOf(8),searchTree.getRoot().getLeft().getValue());
+
+        assertFalse(searchTree.contains(7));
+        assertTrue(bst.contains(7));
+
+    }
+
+    @Test
+    public void testSearchFalse(){
+        assertNull(bst.search(7));
     }
 
 }
