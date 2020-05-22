@@ -56,6 +56,10 @@ public class BinarySearchTree<E extends Comparable<E>> {
         public E getValue() {
             return this.value;
         }
+
+        public int getCount() {
+            return count;
+        }
     }
 
     public void eachInOrder(Consumer<E> consumer) {
@@ -203,7 +207,25 @@ public class BinarySearchTree<E extends Comparable<E>> {
     }
 
     public int rank(E element) {
-        return 0;
+        return nodeRank(this.root, element);
+    }
+
+    private int nodeRank(Node<E> node, E element) {
+        if (node == null) {
+            return 0;
+        }
+
+        if (isSmaller(element,node)) {
+            return nodeRank(node.getLeft(),element);
+        } else if (isEqual(element, node)) {
+            return getNodeCount(node.getLeft());
+        }
+
+        return getNodeCount(node.getLeft()) + 1 + nodeRank(node.getRight(), element);
+    }
+
+    private int getNodeCount(Node<E> node) {
+        return node == null ? 0 : node.getCount();
     }
 
     public E ceil(E element) {
