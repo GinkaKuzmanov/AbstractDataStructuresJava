@@ -2,6 +2,9 @@ package solutions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 public class BinaryTree {
 
@@ -62,6 +65,28 @@ public class BinaryTree {
     }
 
     public List<Integer> topView() {
-        return null;
+        Map<Integer,Pair<Integer,Integer>> offsetValueLevel = new TreeMap<>();
+
+        traverseTree(this,0,1,offsetValueLevel);
+
+        return offsetValueLevel.values().stream().map(Pair::getKey).collect(Collectors.toList());
+
+    }
+
+    private void traverseTree(BinaryTree binaryTree, int offset, int level,
+                              Map<Integer, Pair<Integer, Integer>> offsetValueLevel) {
+
+        if (binaryTree == null) {
+            return;
+        }
+
+        Pair<Integer,Integer> currentValueLevel = offsetValueLevel.get(offset);
+        if(currentValueLevel == null || level < currentValueLevel.getValue()) {
+            offsetValueLevel.put(offset, new Pair<>(binaryTree.value,level));
+        }
+
+        traverseTree(binaryTree.left, offset - 1, level + 1, offsetValueLevel);
+        traverseTree(binaryTree.right,offset + 1, level + 1, offsetValueLevel);
+
     }
 }
