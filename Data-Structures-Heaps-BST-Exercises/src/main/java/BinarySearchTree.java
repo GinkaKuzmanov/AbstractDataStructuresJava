@@ -21,6 +21,10 @@ public class BinarySearchTree<E extends Comparable<E>> {
         this.root = new Node<>(copiedRoot);
     }
 
+    public BinarySearchTree() {
+
+    }
+
     public static class Node<E> {
         private E value;
         private Node<E> leftChild;
@@ -102,7 +106,6 @@ public class BinarySearchTree<E extends Comparable<E>> {
         node.count++;
     }
 
-
     public boolean contains(E element) {
         //reflective approach
         return containsNode(this.root, element);
@@ -120,7 +123,6 @@ public class BinarySearchTree<E extends Comparable<E>> {
 
         return containsNode(node.getLeft(), element);
     }
-
 
     public BinarySearchTree<E> search(E element) {
         Node<E> found = searchedNode(this.root, element);
@@ -184,7 +186,6 @@ public class BinarySearchTree<E extends Comparable<E>> {
         currentNode.leftChild = currentNode.getLeft().getRight();
     }
 
-
     public void deleteMax() {
         ensureValidState();
 
@@ -215,8 +216,8 @@ public class BinarySearchTree<E extends Comparable<E>> {
             return 0;
         }
 
-        if (isSmaller(element,node)) {
-            return nodeRank(node.getLeft(),element);
+        if (isSmaller(element, node)) {
+            return nodeRank(node.getLeft(), element);
         } else if (isEqual(element, node)) {
             return getNodeCount(node.getLeft());
         }
@@ -229,13 +230,58 @@ public class BinarySearchTree<E extends Comparable<E>> {
     }
 
     public E ceil(E element) {
-        return null;
+        if (this.root == null) {
+            return null;
+        }
+        Node<E> current = this.root;
+        Node<E> nearestBigger = null;
+
+        while (current != null) {
+            if (isSmaller(element, current)) {
+                nearestBigger = current;
+                current = current.getLeft();
+            } else if (isGreater(element, current)) {
+                current = current.getRight();
+            } else {
+                Node<E> right = current.getRight();
+                if (right != null && nearestBigger != null) {
+                    nearestBigger = isSmaller(right.getValue(), nearestBigger) ? right : nearestBigger;
+                } else if (nearestBigger == null) {
+                    nearestBigger = right;
+                }
+                break;
+            }
+        }
+        return nearestBigger == null ? null : nearestBigger.getValue();
     }
 
     public E floor(E element) {
-        return null;
+        if (this.root == null) {
+            return null;
+        }
+        Node<E> current = this.root;
+        Node<E> nearestSmaller = null;
+
+        while (current != null) {
+            if (isGreater(element, current)) {
+                nearestSmaller = current;
+                current = current.getRight();
+            } else if (isSmaller(element, current)) {
+                current = current.getLeft();
+            } else {
+                Node<E> left = current.getLeft();
+                if (left != null && nearestSmaller != null) {
+                    nearestSmaller = isGreater(left.getValue(), nearestSmaller) ? left : nearestSmaller;
+                } else if (nearestSmaller == null) {
+                    nearestSmaller = left;
+                }
+                break;
+            }
+        }
+        return nearestSmaller == null ? null : nearestSmaller.getValue();
     }
 
+    //utility methods
     private boolean isEqual(E element, Node<E> node) {
         return element.compareTo(node.getValue()) == 0;
     }

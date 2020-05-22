@@ -47,30 +47,30 @@ public class BinarySearchTreeTest {
                 Arrays.asList(1, 2, 5, 8, 13)
         );
 
-        assertEquals(expected.size(),elements.size());
+        assertEquals(expected.size(), elements.size());
         for (int i = 0; i < expected.size(); i++) {
-            assertEquals(expected.get(i),elements.get(i));
+            assertEquals(expected.get(i), elements.get(i));
         }
 
     }
 
     @Test
-    public void testContainsTrue(){
+    public void testContainsTrue() {
         assertTrue(bst.contains(8));
     }
 
     @Test
-    public void testContainsFalse(){
+    public void testContainsFalse() {
         assertFalse(bst.contains(7));
     }
 
     @Test
-    public void testSearchTrue(){
+    public void testSearchTrue() {
         BinarySearchTree<Integer> searchTree = bst.search(13);
         bst.insert(7);
 
-        assertEquals(Integer.valueOf(13),searchTree.getRoot().getValue());
-        assertEquals(Integer.valueOf(8),searchTree.getRoot().getLeft().getValue());
+        assertEquals(Integer.valueOf(13), searchTree.getRoot().getValue());
+        assertEquals(Integer.valueOf(8), searchTree.getRoot().getLeft().getValue());
 
         assertFalse(searchTree.contains(7));
         assertTrue(bst.contains(7));
@@ -78,15 +78,15 @@ public class BinarySearchTreeTest {
     }
 
     @Test
-    public void testSearchFalse(){
+    public void testSearchFalse() {
         assertNull(bst.search(7));
     }
 
     @Test
-    public void testRange(){
-        List<Integer> list = bst.range(1,7);
+    public void testRange() {
+        List<Integer> list = bst.range(1, 7);
 
-        List<Integer> expected = Arrays.asList(1,2,5);
+        List<Integer> expected = Arrays.asList(1, 2, 5);
 
         assertEquals(3, expected.size());
 
@@ -97,17 +97,62 @@ public class BinarySearchTreeTest {
     }
 
     @Test
-    public void deleteMax(){
+    public void deleteMax() {
         assertTrue(bst.contains(13));
         bst.deleteMax();
         assertFalse(bst.contains(13));
     }
+
     @Test
-    public void deleteMin(){
+    public void deleteMin() {
         assertTrue(bst.contains(1));
         bst.deleteMin();
         assertFalse(bst.contains(1));
     }
 
+    @Test
+    public void testCount(){
+        assertEquals(5, bst.count());
+    }
+
+    @Test
+    public void testRank() {
+        //1 and 13 are deleted before this method is called
+        //2,5,8 is left -> 8 have to be 3rd in Rank
+        assertEquals(3, bst.rank(8));
+    }
+
+    @Test
+    public void testRankMinElement(){
+        //test with min non-existing element
+        assertEquals(0, bst.rank(-1));
+
+        assertEquals(1,bst.rank(2));
+    }
+
+    @Test
+    public void testRankEmptyTree(){
+        assertEquals(0, new BinarySearchTree<Integer>().rank(1));
+    }
+
+    @Test
+    public void testFloor() {
+        assertEquals(Integer.valueOf(1),bst.floor(2));
+    }
+
+    @Test
+    public void testEmptyFloor(){
+        assertNull(bst.floor(-1));
+    }
+
+    @Test
+    public void testCeil() {
+        assertEquals(Integer.valueOf(5),bst.ceil(2));
+    }
+
+    @Test
+    public void testEmptyCeil(){
+        assertNull(bst.ceil(20));
+    }
 
 }
